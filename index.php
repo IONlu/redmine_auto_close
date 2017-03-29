@@ -50,7 +50,7 @@ function callApi($url, $method = 'GET', $data = null)
 
     if ($data) {
         $curlOptions = $curlOptions + array(
-            CURLOPT_POSTFIELDS => json_encode(CLOSE_BODY),
+            CURLOPT_POSTFIELDS => json_encode($data),
         );
     }
 
