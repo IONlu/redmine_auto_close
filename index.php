@@ -3,18 +3,20 @@
 date_default_timezone_set('Europe/Luxembourg');
 require_once __DIR__.'/config.php';
 
-const CLOSE_BODY = array(
-    'issue' => array(
-        'status_id' => Config::STATUS_CLOSED,
-        'notes'     => "Hey o/\n\nsorry to bother you, but I'm closing this issue now as it has been resolved for over ".Config::CLOSE_IF_OLDER_THEN." ago.\n\nRegards,\nVaiva",
-    ),
-);
-
 try {
     $issuesToClose = getResolvedIssues();
     foreach ($issuesToClose as $issueToClose) {
         $url = Config::REDMINE_URL.'/issues/'.$issueToClose['id'].'.json';
-        callApi($url, 'PUT', CLOSE_BODY);
+        callApi(
+            $url,
+            'PUT',
+            array(
+                'issue' => array(
+                    'status_id' => Config::STATUS_CLOSED,
+                    'notes'     => "Hey o/\n\nsorry to bother you, but I'm closing this issue now as it has been resolved for over ".Config::CLOSE_IF_OLDER_THEN." ago.\n\nRegards,\nVaiva",
+                ),
+            )
+        );
     }
 } catch (Exception $e) {
     echo $e->getMessage();
