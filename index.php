@@ -1,28 +1,21 @@
 <?php
 
+date_default_timezone_set('Europe/Luxembourg');
 require_once __DIR__.'/config.php';
 
 const CLOSE_BODY = array(
     'issue' => array(
         'status_id' => Config::STATUS_CLOSED,
+        'notes'     => "Hey o/\n\nsorry to bother you, but I'm closing this issue now as it has been resolved over ".Config::CLOSE_IF_OLDER_THEN." ago.\n\nRegards,\nVaiva",
     ),
 );
 
 try {
     $issuesToClose = getResolvedIssues();
-    print_r($issuesToClose);
-
     foreach ($issuesToClose as $issueToClose) {
-        print_r($issueToClose);
-
-        print_r(Config::REDMINE_URL.'/issues/'.$issueToClose['id'].'.json'."\n");
-
-        print_r(CLOSE_BODY);
-
-        die();
+        $url = Config::REDMINE_URL.'/issues/'.$issueToClose['id'].'.json';
+        callApi($url, 'PUT', CLOSE_BODY);
     }
-
-    die("done\n");
 } catch (Exception $e) {
     echo $e->getMessage();
 }
@@ -37,19 +30,29 @@ function getResolvedIssues()
     );
 }
 
-function callApi($url)
+function callApi($url, $method = 'GET', $data = null)
 {
     $curl = curl_init();
 
-    curl_setopt_array($curl, array(
+    $curlOptions = array(
         CURLOPT_URL            => $url,
         CURLOPT_SSL_VERIFYPEER => false,
         CURLOPT_SSL_VERIFYHOST => false,
         CURLOPT_RETURNTRANSFER => 1,
+        CURLOPT_CUSTOMREQUEST  => strtoupper($method),
         CURLOPT_HTTPHEADER     => array(
+            'content-type: application/json',
             'x-redmine-api-key: '.Config::API_KEY,
         ),
-    ));
+    );
+
+    if ($data) {
+        $curlOptions = $curlOptions + array(
+            CURLOPT_POSTFIELDS => json_encode(CLOSE_BODY),
+        );
+    }
+
+    curl_setopt_array($curl, $curlOptions);
 
     $response = curl_exec($curl);
     $err      = curl_error($curl);
