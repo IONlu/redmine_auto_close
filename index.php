@@ -6,7 +6,7 @@ require_once __DIR__.'/config.php';
 const CLOSE_BODY = array(
     'issue' => array(
         'status_id' => Config::STATUS_CLOSED,
-        'notes'     => "Hey o/\n\nsorry to bother you, but I'm closing this issue now as it has been resolved over ".Config::CLOSE_IF_OLDER_THEN." ago.\n\nRegards,\nVaiva",
+        'notes'     => "Hey o/\n\nsorry to bother you, but I'm closing this issue now as it has been resolved for over ".Config::CLOSE_IF_OLDER_THEN." ago.\n\nRegards,\nVaiva",
     ),
 );
 
