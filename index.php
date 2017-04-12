@@ -28,7 +28,7 @@ function getResolvedIssues()
         Config::REDMINE_URL
             .'/issues.json'
             .'?status_id='.Config::STATUS_RESOLVED
-            .'&updated_on=%3C%3D'.date('Y-m-d\TH:i:s\Z', strtotime('-'.Config::CLOSE_IF_OLDER_THEN))
+            .'&updated_on=%3C%3D'.date('Y-m-d', strtotime('-'.Config::CLOSE_IF_OLDER_THEN))
     );
 }
 
